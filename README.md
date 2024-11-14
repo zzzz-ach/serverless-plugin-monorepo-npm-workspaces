@@ -1,0 +1,1 @@
+# serverless-plugin-monorepo-npm-workspace
