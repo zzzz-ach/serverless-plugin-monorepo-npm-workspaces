@@ -1,0 +1,36 @@
+{
+  "name": "serverless-plugin-monorepo-npm-workspaces",
+  "version": "1.0.0",
+  "description": "serverless plugin to deploy npm workspaces monorepo applications",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "jest",
+    "lint": "eslint index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/zzzz-ach/serverless-plugin-monorepo-npm-workspaces.git"
+  },
+  "keywords": [
+    "serverless",
+    "plugin",
+    "npm",
+    "workspaces",
+    "monorepo"
+  ],
+  "author": "zzzz-ach",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/zzzz-ach/serverless-plugin-monorepo-npm-workspaces/issues"
+  },
+  "homepage": "https://github.com/zzzz-ach/serverless-plugin-monorepo-npm-workspaces#readme",
+  "peerDependencies": {
+    "serverless": ">=2.60"
+  },
+  "devDependencies": {
+    "eslint": "^8.57.1",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.31.0"
+  }
+}
