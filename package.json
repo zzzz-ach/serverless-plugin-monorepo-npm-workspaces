@@ -5,7 +5,6 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "test": "jest",
     "lint": "eslint index.js"
   },
   "repository": {
@@ -19,8 +18,8 @@
     "workspaces",
     "monorepo"
   ],
-  "author": "zzzz-ach",
-  "license": "ISC",
+  "author": "zzzz-ach (https://github.com/zzzz-ach)",
+  "license": "LicenseRef-LICENSE",
   "bugs": {
     "url": "https://github.com/zzzz-ach/serverless-plugin-monorepo-npm-workspaces/issues"
   },

@@ -65,4 +65,6 @@ Each serverless application is deployed with a layer containing its dependencies
 
 This layer has by default the path `layers/main` but can renamed via the `layerPath` parameter (see [Configuration](#Configuration)).
 
-All dependencies from the monorepository are copied to a node_modules directory at the root of the applications and are t
+All dependencies from the monorepository are copied to a temporary node_modules directory at the root of the applications. The dependencies from the deploying application are generated via `npm ci --workspace=my_package` and are then copied (excepted the symlinks) to a layer directory `layerPath` inside the application directory.
+Dependencies from the monorepository (the former symlinks) are copied inside the application directory into the `node_modules` directory.
+
