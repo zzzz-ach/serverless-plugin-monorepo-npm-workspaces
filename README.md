@@ -1,5 +1,8 @@
 # serverless-plugin-monorepo-npm-workspaces
 
+## Compatibility
+Only tested with serverless v3.x
+
 ## Use case
 You are working with a npm workspaces monorepo and you want to be able to deploy several serverless applications independently from each other but with common dependencies.
 Each deployed application must not embark other applications code or dependencies.
@@ -61,10 +64,14 @@ By default, the plugin use two variables :
   - should be the same as the path defined in your layer : something like `${self:layers.your-layer-name.path}`
 
 ## How it is working
+### Dependencies layer
 Each serverless application is deployed with a layer containing its dependencies except the dependencies from the monorepository.
 
 This layer has by default the path `layers/main` but can renamed via the `layerPath` parameter (see [Configuration](#Configuration)).
 
+### Dependencies copy
 All dependencies from the monorepository are copied to a temporary node_modules directory at the root of the applications. The dependencies from the deploying application are generated via `npm ci --workspace=my_package` and are then copied (excepted the symlinks) to a layer directory `layerPath` inside the application directory.
 Dependencies from the monorepository (the former symlinks) are copied inside the application directory into the `node_modules` directory.
 
+Plugin scans .gitignore files in workspace directory and package directories to prevent copy unwanted files to the packaging application node_modules.
+Files from `serverless.yml` package.patterns property are not copied as well.
