@@ -1,6 +1,6 @@
 {
   "name": "serverless-plugin-monorepo-npm-workspaces",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "description": "serverless plugin to deploy npm workspaces monorepo applications",
   "main": "index.js",
   "type": "module",
