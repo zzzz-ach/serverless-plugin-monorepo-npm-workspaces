@@ -1,4 +1,5 @@
 import fs, { renameSync, rmSync } from 'node:fs';
+import path from 'node:path';
 import { spawnSync } from 'node:child_process';
 import process from 'node:process';
 
@@ -57,6 +58,11 @@ export default class ServerlessPluginMonorepoNPMWorkspaces {
     spawnSync(npmCommand, ['ci', `--workspace=${currentPackageJson.name}`]);
 
     // get symlinks from node_modules
+    if (!fs.existsSync(workspaceNodeModulesPath)) {
+      // eslint-disable-next-line max-len
+      this.utils.log(`workspace node_modules path not found, value is ${workspaceNodeModulesPath} but workspace root directory path ${workspaceRootDirectoryPath} leads to ${path.dirname(workspaceRootDirectoryPath)}`);
+      this.serverless.classes.Error('Workspace node_modules folder not found');
+    }
     const workspaceNodeModules = fs.readdirSync(workspaceNodeModulesPath, {
       withFileTypes: true,
     });

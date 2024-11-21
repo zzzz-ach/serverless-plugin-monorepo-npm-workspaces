@@ -24,6 +24,9 @@
     "url": "https://github.com/zzzz-ach/serverless-plugin-monorepo-npm-workspaces/issues"
   },
   "homepage": "https://github.com/zzzz-ach/serverless-plugin-monorepo-npm-workspaces#readme",
+  "engines": {
+    "node": ">=18.20.0"
+  },
   "peerDependencies": {
     "serverless": ">=2.60"
   },
