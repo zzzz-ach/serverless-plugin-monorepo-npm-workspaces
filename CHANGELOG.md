@@ -1,5 +1,8 @@
 # Release history
 
+## 1.2.0
+- fix throw error
+
 ## 1.1.2
 - fix throw error
 
