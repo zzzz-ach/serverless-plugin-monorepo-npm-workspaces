@@ -1,5 +1,8 @@
 # Release history
 
+## 1.1.2
+- fix throw error
+
 ## 1.1.1
 - check if workspace directory path contains a node_modules folder or throw
 - specify node version >= 18.20 in package.json
