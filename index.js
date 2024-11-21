@@ -60,8 +60,8 @@ export default class ServerlessPluginMonorepoNPMWorkspaces {
     // get symlinks from node_modules
     if (!fs.existsSync(workspaceNodeModulesPath)) {
       // eslint-disable-next-line max-len
-      this.utils.log(`workspace node_modules path not found, value is ${workspaceNodeModulesPath} but workspace root directory path ${workspaceRootDirectoryPath} leads to ${path.dirname(workspaceRootDirectoryPath)}`);
-      this.serverless.classes.Error('Workspace node_modules folder not found');
+      this.utils.log(`workspace node_modules path not found, value is ${workspaceNodeModulesPath} but workspace root directory path ${workspaceRootDirectoryPath} leads to ${path.resolve(workspaceRootDirectoryPath)}`);
+      throw this.serverless.classes.Error('Workspace node_modules folder not found');
     }
     const workspaceNodeModules = fs.readdirSync(workspaceNodeModulesPath, {
       withFileTypes: true,
