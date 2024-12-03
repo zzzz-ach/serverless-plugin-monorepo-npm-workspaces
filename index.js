@@ -22,11 +22,11 @@ export default class ServerlessPluginMonorepoNPMWorkspaces {
       required: [],
     });
     this.hooks = {
-      'before:package:initialize': () => this.beforePackage(),
+      'after:package:initialize': () => this.afterPackage(),
     };
   }
 
-  beforePackage() {
+  afterPackage() {
     this.utils.log(PLUGIN_NAME, 'starting application packaging');
     if (!this.serverless.version.startsWith('3')) {
       this.utils.log(`This plugin has only been tested with serverless v3.x, it may not be working for your version ${this.serverless.version}`);
@@ -57,8 +57,7 @@ export default class ServerlessPluginMonorepoNPMWorkspaces {
     this.utils.log(PLUGIN_NAME, `generating application ${currentPackageJson.name} dependencies`);
     const spawn = spawnSync(npmCommand, ['ci', `--workspace=${currentPackageJson.name}`], { shell: true });
     if (spawn.stderr.length) {
-      this.utils.log(`An error happened : ${spawn.stderr.toString()}`);
-      throw new this.serverless.classes.Error(`Error running npm ci --workspace=${currentPackageJson.name}`);
+      this.utils.log(`npm ci command stderr output: ${spawn.stderr.toString()}`);
     }
 
     // get symlinks from node_modules
