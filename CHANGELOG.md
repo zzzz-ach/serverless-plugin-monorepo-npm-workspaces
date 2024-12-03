@@ -1,4 +1,10 @@
 # Release history
+## 1.2.3
+- updated spawnsync call for windows use
+
+## 1.2.2
+- updated error handling for npm ci
+
 ## 1.2.1
 - fix throw error...
 
