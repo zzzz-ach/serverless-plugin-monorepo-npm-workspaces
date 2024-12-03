@@ -55,8 +55,8 @@ export default class ServerlessPluginMonorepoNPMWorkspaces {
 
     // execute command npm ci --workspace=my_package
     this.utils.log(PLUGIN_NAME, `generating application ${currentPackageJson.name} dependencies`);
-    const spawn = spawnSync(npmCommand, ['ci', `--workspace=${currentPackageJson.name}`]);
-    if (spawn.stderr) {
+    const spawn = spawnSync(npmCommand, ['ci', `--workspace=${currentPackageJson.name}`], { shell: true });
+    if (spawn.stderr.length) {
       this.utils.log(`An error happened : ${spawn.stderr.toString()}`);
       throw new this.serverless.classes.Error(`Error running npm ci --workspace=${currentPackageJson.name}`);
     }
