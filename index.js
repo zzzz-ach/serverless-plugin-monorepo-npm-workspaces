@@ -69,7 +69,6 @@ export default class ServerlessPluginMonorepoNPMWorkspaces {
     const workspaceNodeModules = fs.readdirSync(workspaceNodeModulesPath, {
       withFileTypes: true,
     });
-    const symlinks = [];
     workspaceNodeModules.forEach((entry) => {
       // scoped packages
       if (entry.name.startsWith('@')) {
@@ -78,28 +77,18 @@ export default class ServerlessPluginMonorepoNPMWorkspaces {
         });
         scopePackage.forEach((subPackage) => {
           if (subPackage.isSymbolicLink()) {
-            symlinks.push(subPackage);
-            symlinks.push({
-              ...subPackage,
-              fullName: `${entry.name}/${subPackage.name}`,
-            });
+            rmSync(`${subPackage.parentPath}/${subPackage.name}`, { recursive: true, force: true });
           }
         });
       } else if (entry.isSymbolicLink()) {
-        symlinks.push({
-          ...entry,
-          fullName: entry.name,
-        });
+        rmSync(`${entry.parentPath}/${entry.name}`, { recursive: true, force: true });
       }
     });
 
     const layerPath = this.serverless.service.initialServerlessConfig[PLUGIN_NAME]?.layerPath || DEFAULT_LAYER_PATH;
     // copy node_modules from root dir without symlinks to layers/main/nodejs/node_modules
     fs.rmSync(layerPath, { recursive: true, force: true });
-    fs.cpSync(workspaceNodeModulesPath, `${layerPath}/nodejs/node_modules`, {
-      recursive: true,
-      filter: (source) => !symlinks.map((entry) => `${entry.parentPath}/${entry.name}`).includes(source),
-    });
+    fs.cpSync(workspaceNodeModulesPath, `${layerPath}/nodejs/node_modules`, { recursive: true });
 
     // get a map of directories in workspaces with dirname <> package name
     const packageNames = new Map();
