@@ -1,4 +1,10 @@
 # Release history
+## 1.2.5
+- updated symlink removal for cross env compatibility
+
+## 1.2.4
+- changed plugin lifecycle to after:package:initialize
+
 ## 1.2.3
 - updated spawnsync call for windows use
 
