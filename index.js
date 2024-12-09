@@ -104,23 +104,27 @@ export default class ServerlessPluginMonorepoNPMWorkspaces {
 
     // get a map of directories in workspaces with dirname <> package name
     const packageNames = new Map();
-    const workspacePackages = fs.readdirSync('..', {
-      withFileTypes: true,
+    const workspacePackages = [];
+
+    workspaceRootDirectoryPathJson.workspaces.forEach((w) => {
+      fs.readdirSync(`${workspaceRootDirectoryPath}/${w.endsWith('/*') ? w.substring(0, w.length - '/*'.length) : w}`, { withFileTypes: true })
+        .forEach((p) => {
+          workspacePackages.push(p);
+        });
     });
 
     workspacePackages.forEach((workspacePackage) => {
-      const packageJson = `../${workspacePackage.name}/package.json`;
+      const packageJson = `${workspacePackage.parentPath}/${workspacePackage.name}/package.json`;
       if (workspacePackage.isDirectory() && fs.existsSync(packageJson)) {
         const packageJsonDir = JSON.parse(fs.readFileSync(packageJson));
-        packageNames.set(packageJsonDir.name, { packageJson: packageJsonDir, workspacePackageName: workspacePackage.name });
+        packageNames.set(packageJsonDir.name, { packageJson: packageJsonDir, workspacePackage });
       }
     });
 
     // copy internal deps that where symlinks in root dir to node_modules
-    const toIgnore = ['.gitignore'];
+    const toIgnore = [];
     if (this.serverless.service.initialServerlessConfig.package?.patterns?.length) {
-      // eslint-disable-next-line no-unsafe-optional-chaining
-      toIgnore.push(...this.serverless.service.initialServerlessConfig.package?.patterns.map((pattern) => {
+      toIgnore.push(...this.serverless.service.initialServerlessConfig.package.patterns.map((pattern) => {
         let sanitizedPattern = pattern.startsWith('!') ? pattern.substring(1) : pattern;
         if (sanitizedPattern.endsWith('/**')) {
           sanitizedPattern = sanitizedPattern.substring(0, sanitizedPattern.length - 3);
@@ -128,32 +132,19 @@ export default class ServerlessPluginMonorepoNPMWorkspaces {
         return sanitizedPattern;
       }));
     }
-    if (fs.existsSync(`${workspaceRootDirectoryPath}/.gitignore`)) {
-      const workspaceGitIgnore = fs.readFileSync(`${workspaceRootDirectoryPath}/.gitignore`, { encoding: 'utf8' });
-      toIgnore.push(...workspaceGitIgnore.split('\n'));
-    }
-    if (fs.existsSync('.gitignore')) {
-      const currentGitIgnore = fs.readFileSync('.gitignore', { encoding: 'utf8' });
-      toIgnore.push(...currentGitIgnore.split('\n'));
-    }
 
     function copyMonorepoDependencies(packageJson) {
       Object.keys(packageJson.dependencies).forEach((dep) => {
         if (symlinks.find((link) => link.fullName === dep)) {
-          const packageName = `../${packageNames.get(dep).workspacePackageName}`;
-          const depToIgnore = [];
-          if (fs.existsSync(`${packageName}/.gitignore`)) {
-            depToIgnore.push(fs.readFileSync(`${packageName}/.gitignore`, { encoding: 'utf8' }).split('\n'));
-          }
-          fs.cpSync(`../${packageNames.get(dep).workspacePackageName}`, `./node_modules/${dep}`, {
+          const packageName = `${packageNames.get(dep).workspacePackage.parentPath}/${packageNames.get(dep).workspacePackage.name}`;
+          fs.cpSync(packageName, `./node_modules/${dep}`, {
             recursive: true,
             force: true,
             filter: (source) => {
               const filePath = source.split('/');
-              const toIgnoreAll = [...toIgnore, ...depToIgnore];
               let res = true;
-              toIgnoreAll.forEach((tia) => {
-                if (filePath.some((t) => t === tia)) {
+              toIgnore.forEach((ti) => {
+                if (filePath.some((t) => t === ti)) {
                   res = false;
                 }
               });

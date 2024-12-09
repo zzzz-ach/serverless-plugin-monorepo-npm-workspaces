@@ -1,4 +1,8 @@
 # Release history
+## 1.3.0
+- use of relative paths to get workspace dependencies
+- use of package.patterns in sls conf when copying workspace dependencies
+
 ## 1.2.5
 - updated symlink removal for cross env compatibility
 

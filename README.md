@@ -73,5 +73,4 @@ This layer has by default the path `layers/main` but can renamed via the `layerP
 All dependencies from the monorepository are copied to a temporary node_modules directory at the root of the applications. The dependencies from the deploying application are generated via `npm ci --workspace=my_package` and are then copied (excepted the symlinks) to a layer directory `layerPath` inside the application directory.
 Dependencies from the monorepository (the former symlinks) are copied inside the application directory into the `node_modules` directory.
 
-Plugin scans .gitignore files in workspace directory and package directories to prevent copy unwanted files to the packaging application node_modules.
-Files from `serverless.yml` package.patterns property are not copied as well.
+Files from `serverless.yml` package.patterns property are not copied to the packaging application node_modules.
