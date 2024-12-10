@@ -1,4 +1,7 @@
 # Release history
+## 1.3.1
+- removed sls as peer dependency
+
 ## 1.3.0
 - use of relative paths to get workspace dependencies
 - use of package.patterns in sls conf when copying workspace dependencies
